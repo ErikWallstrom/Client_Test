@@ -1,12 +1,17 @@
-#include "Connection.h"
-#include <iostream>
+#include "Core.h"
 #include <string>
+#include <ctime>
+#include <iostream>
+/*
+size_t id = texture_handler.load_texture("../../res/images/Logo.png");
+
+Game_Object object(50.0, 50.0, 100, 100);
+object.set_texture(texture_handler.get_texture(id));
+scene.add(&object);
+*/
 
 int main()
 {
-    if(SDL_Init(0)) throw SDL_GetError();
-    if(SDLNet_Init()) throw SDLNet_GetError();
-
     std::cout << "EW_AH Client V_1.0\n" << std::endl;
 
     std::string ip;
@@ -19,37 +24,29 @@ int main()
     std::cout.flush();
     std::cin >> port;
 
-    while(true)
+    try
     {
-        try
-        {
-            Connection connection(ip, port);
-            while(true)
-            {
-                std::cout << "Send: ";
-                std::cout.flush();
+        Core core(
+            "Game Window", 800, 600,
+            ip.c_str(), port
+        );
 
-                char buffer[1024];
-                std::cin.getline(buffer, 1024);
-                connection.flag(Connection::DATA);
-                connection.send(buffer, 1024);
-            }
-        }
-        catch(const char* msg)
-        {
-            std::cout << msg << ", want to retry? (y/n): ";
-            std::cout.flush();
+        std::srand(std::time(0));
 
-            char input;
-            std::cin >> input;
-            if(input == 'y')
-            {
-                continue;
-            }
-            else
-            {
-                return EXIT_FAILURE;
-            }
-        }
+        size_t id = core.texture_handler->load("../../res/images/Logo.png");
+        Game_Object object(
+            std::rand() % 800, std::rand() % 600, 120, 80
+        );
+        object.set_texture(core.texture_handler->get(id));
+
+        core.scene->add(&object, "localhost");
+        core.loop();
     }
+    catch(const char* message)
+    {
+        std::cout << message << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }

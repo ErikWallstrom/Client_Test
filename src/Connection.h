@@ -3,6 +3,12 @@
 
 #include "../include/SDL2/SDL_net.h"
 #include <string>
+
+#define CONNECTED    1
+#define DISCONNECTED 2
+#define FULL         3
+#define POSITION     4
+
 class Connection
 {
 private:
@@ -11,18 +17,14 @@ private:
     SDLNet_SocketSet socket_set;
 
 public:
-    enum Message : char
-    {
-        CONNECTED = 0,
-        FULL,
-        DATA
-    };
-
-    Connection(std::string ip, Uint16 port);
+    Connection(const char* ip, Uint16 port);
     ~Connection();
 
-    void flag(Message type);
+    void flag(Uint8 type);
     void send(void* data, int size);
+    bool data_recieved();
+    Uint8 data_type();
+    void data_recieve(Uint8* buffer, int size);
 };
 
 #endif

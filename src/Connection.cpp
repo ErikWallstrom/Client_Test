@@ -1,10 +1,9 @@
 #include "Connection.h"
-#include <algorithm>
 #include <iostream>
 
-Connection::Connection(std::string ip, Uint16 port)
+Connection::Connection(const char* ip, Uint16 port)
 {
-    if(SDLNet_ResolveHost(&server_ip, ip.c_str(), port))
+    if(SDLNet_ResolveHost(&server_ip, ip, port))
     {
         throw "Invalid IP or/and port";
     }
@@ -28,17 +27,17 @@ Connection::Connection(std::string ip, Uint16 port)
 
         if(SDLNet_CheckSockets(socket_set, 5000) == 1)
         {
-            Message msg;
-            if(SDLNet_TCP_Recv(socket, &msg, 1) < 1)
+            Uint8 message;
+            if(SDLNet_TCP_Recv(socket, &message, 1) < 1)
             {
                 throw "Server is down";
             }
 
-            if(msg == CONNECTED)
+            if(message == CONNECTED)
             {
-                std::cout << "Successfully connected to server" << std::endl;
+                std::cout << "Successfully connected to server\n" << std::endl;
             }
-            else if(msg == FULL)
+            else if(message == FULL)
             {
                 SDLNet_TCP_DelSocket(socket_set, socket);
                 SDLNet_TCP_Close(socket);
@@ -60,7 +59,7 @@ Connection::~Connection()
     SDLNet_TCP_Close(socket);
 }
 
-void Connection::flag(Message type)
+void Connection::flag(Uint8 type)
 {
     if(SDLNet_TCP_Send(socket, &type, 1) < 1)
     {
@@ -71,6 +70,31 @@ void Connection::flag(Message type)
 void Connection::send(void* data, int size)
 {
     if(SDLNet_TCP_Send(socket, data, size) < size)
+    {
+        throw "Lost connection to server";
+    }
+}
+
+bool Connection::data_recieved()
+{
+    SDLNet_CheckSockets(socket_set, 0);
+    return SDLNet_SocketReady(socket);
+}
+
+Uint8 Connection::data_type()
+{
+    Uint8 type;
+    if(SDLNet_TCP_Recv(socket, &type, 1) < 1)
+    {
+        throw "Lost connection to server";
+    }
+
+    return type;
+}
+
+void Connection::data_recieve(Uint8* buffer, int size)
+{
+    if(SDLNet_TCP_Recv(socket, buffer, size) < size)
     {
         throw "Lost connection to server";
     }
