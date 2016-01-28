@@ -181,4 +181,6 @@ void Core::loop()
         update(delta_time);
         scene->draw();
     }
+
+    Connection_send_flag(connection, DISCONNECTED);
 }
