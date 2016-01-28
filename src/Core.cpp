@@ -134,8 +134,13 @@ void Core::update(int delta)
                     static_cast<double>(y),
                     120, 80
                 );
-                size_t id = texture_handler->load("../../res/images/Logo.png");
-                SDL_SetTextureColorMod(texture_handler->get(id), 0, 0, 255);
+                size_t id = texture_handler->load("../../res/images/TB1.0.png");
+                SDL_SetTextureColorMod(
+                    texture_handler->get(id),
+                    std::rand() % 255,
+                    std::rand() % 255,
+                    std::rand() % 255
+                );
                 p->set_texture(texture_handler->get(id));
                 scene->add(p, address);
             }

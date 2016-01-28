@@ -33,7 +33,7 @@ int main()
 
         std::srand(std::time(0));
 
-        size_t id = core.texture_handler->load("../../res/images/Logo.png");
+        size_t id = core.texture_handler->load("../../res/images/TB1.0.png");
         IPaddress ip_addr = Connection_get_address(core.connection);
         std::string name =
             std::to_string((ip_addr.host & 0xFF000000) >> 24) +
