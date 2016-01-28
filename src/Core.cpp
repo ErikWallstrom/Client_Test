@@ -106,8 +106,6 @@ void Core::update(int delta)
             Uint16 x = SDLNet_Read16(buffer);
             Uint16 y = SDLNet_Read16(buffer + 2);
 
-            std::cout << "X, Y:  " << x << ", " << y << std::endl;
-
             Uint32 ip = SDLNet_Read32(buffer + 4);
             Uint16 port = SDLNet_Read16(buffer + 8);
 
