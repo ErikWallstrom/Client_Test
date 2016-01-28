@@ -63,3 +63,8 @@ Game_Object* Scene::get(std::string name)
 
     return nullptr;
 }
+
+void Scene::remove(std::string name)
+{
+    objects.erase(name);
+}

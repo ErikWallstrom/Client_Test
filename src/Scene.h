@@ -19,6 +19,7 @@ public:
     void draw();
     void add(Game_Object* object, std::string name);
     Game_Object* get(std::string name);
+    void remove(std::string name);
 };
 
 #endif

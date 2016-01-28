@@ -148,6 +148,27 @@ void Core::update(int delta)
                 p->position.set_y(static_cast<double>(y));
             }
         }
+        else if(type == DISCONNECTED)
+        {
+            Uint8 buffer[6] = {0};
+            Connection_recv_data(connection, buffer, 6);
+
+            Uint32 ip = SDLNet_Read32(buffer);
+            Uint16 port = SDLNet_Read16(buffer + 4);
+
+            std::string address =
+                std::to_string((ip & 0xFF000000) >> 24) +
+                std::to_string((ip & 0x00FF0000) >> 16) +
+                std::to_string((ip & 0x0000FF00) >> 8) +
+                std::to_string((ip & 0x000000FF)) +
+                std::to_string(port);
+
+            if(scene->get(address))
+            {
+                std::cout << "DISC" << std::endl;
+                scene->remove(address);
+            }
+        }
     }
 
     IPaddress ip_addr = Connection_get_address(connection);
