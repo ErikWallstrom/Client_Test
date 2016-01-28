@@ -34,12 +34,20 @@ int main()
         std::srand(std::time(0));
 
         size_t id = core.texture_handler->load("../../res/images/Logo.png");
-        Game_Object object(
+        IPaddress ip_addr = Connection_get_address(core.connection);
+        std::string name =
+            std::to_string((ip_addr.host & 0xFF000000) >> 24) +
+            std::to_string((ip_addr.host & 0x00FF0000) >> 16) +
+            std::to_string((ip_addr.host & 0x0000FF00) >> 8) +
+            std::to_string((ip_addr.host & 0x000000FF)) +
+            std::to_string(ip_addr.port);
+
+        Game_Object* object = new Game_Object(
             std::rand() % 800, std::rand() % 600, 120, 80
         );
-        object.set_texture(core.texture_handler->get(id));
+        object->set_texture(core.texture_handler->get(id));
 
-        core.scene->add(&object, "localhost");
+        core.scene->add(object, name);
         core.loop();
     }
     catch(const char* message)

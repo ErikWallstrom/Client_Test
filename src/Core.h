@@ -10,8 +10,6 @@
 class Core
 {
 private:
-    std::map<std::string, Game_Object*>* objects;
-    Connection* connection;
     Event_Handler* event_handler;
 
     bool running;
@@ -20,6 +18,7 @@ private:
     void update(int delta);
 
 public:
+    Connection* connection;
     Window* window;
     Scene* scene;
     Texture_Handler* texture_handler;

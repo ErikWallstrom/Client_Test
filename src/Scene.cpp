@@ -25,6 +25,14 @@ Scene::~Scene()
     SDL_DestroyTexture(texture);
 }
 
+void Scene::update(int delta)
+{
+    for(auto pair : objects)
+    {
+        pair.second->update(delta);
+    }
+}
+
 void Scene::draw()
 {
     SDL_SetRenderTarget(renderer, texture);
@@ -48,7 +56,10 @@ void Scene::add(Game_Object* object, std::string name)
     }
 }
 
-std::map<std::string, Game_Object*>* Scene::get_objects()
+Game_Object* Scene::get(std::string name)
 {
-    return &objects;
+    if(objects.find(name) != objects.end())
+        return objects[name];
+
+    return nullptr;
 }

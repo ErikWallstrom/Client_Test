@@ -1,30 +1,22 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+#include <stdbool.h>
 #include "../include/SDL2/SDL_net.h"
-#include <string>
+typedef struct Connection Connection;
 
 #define CONNECTED    1
 #define DISCONNECTED 2
 #define FULL         3
 #define POSITION     4
 
-class Connection
-{
-private:
-    TCPsocket socket;
-    IPaddress server_ip;
-    SDLNet_SocketSet socket_set;
-
-public:
-    Connection(const char* ip, Uint16 port);
-    ~Connection();
-
-    void flag(Uint8 type);
-    void send(void* data, int size);
-    bool data_recieved();
-    Uint8 data_type();
-    void data_recieve(Uint8* buffer, int size);
-};
+Connection* Connection_create       (const char* ip, Uint16 port);
+void        Connection_destroy      (Connection** connection);
+void        Connection_send_flag    (Connection* self, Uint8 flag);
+void        Connection_send_data    (Connection* self, Uint8* data, int size);
+bool        Connection_recieved     (Connection* self);
+Uint8       Connection_recv_flag    (Connection* self);
+void        Connection_recv_data    (Connection* self, Uint8* buffer, int size);
+IPaddress   Connection_get_address  (Connection* self);
 
 #endif

@@ -14,9 +14,11 @@ public:
     Scene(SDL_Renderer* renderer, double x, double y, int width, int height);
     ~Scene();
 
+    virtual void update(int delta);
+
     void draw();
     void add(Game_Object* object, std::string name);
-    std::map<std::string, Game_Object*>* get_objects();
+    Game_Object* get(std::string name);
 };
 
 #endif
