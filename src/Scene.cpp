@@ -43,6 +43,7 @@ void Scene::draw()
     }
     SDL_SetRenderTarget(renderer, NULL);
 
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     render(renderer);
     SDL_RenderPresent(renderer);

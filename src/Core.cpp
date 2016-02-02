@@ -73,22 +73,23 @@ void Core::handle_events()
         std::to_string((ip_addr.host & 0x000000FF)) +
         std::to_string(ip_addr.port);
 
-    Game_Object* player = scene->get(local);
-    if(event_handler->key_down(SDL_SCANCODE_W))
+    Player* player = dynamic_cast<Player*>(scene->get(local));
+    if(event_handler->mouse_down(Event_Handler::LEFT))
     {
-        player->position.set_y(player->position.get_y() - 5);
-    }
-    if(event_handler->key_down(SDL_SCANCODE_S))
-    {
-        player->position.set_y(player->position.get_y() + 5);
-    }
-    if(event_handler->key_down(SDL_SCANCODE_A))
-    {
-        player->position.set_x(player->position.get_x() - 5);
-    }
-    if(event_handler->key_down(SDL_SCANCODE_D))
-    {
-        player->position.set_x(player->position.get_x() + 5);
+        Uint16 mouse_x = event_handler->mouse_x();
+        Uint16 mouse_y = event_handler->mouse_y();
+
+        player->move_to(Vector2d(
+            static_cast<double>(mouse_x),
+            static_cast<double>(mouse_y)
+        ));
+
+        Uint8 buffer[4] = {0};
+        SDLNet_Write16(mouse_x, buffer);
+        SDLNet_Write16(mouse_y, buffer + 2);
+
+        Connection_send_flag(connection, POSITION);
+        Connection_send_data(connection, buffer, 4);
     }
 }
 
@@ -124,10 +125,10 @@ void Core::update(int delta)
                 std::to_string((ip_addr.host & 0x000000FF)) +
                 std::to_string(ip_addr.port);
 
-            Game_Object* p = scene->get(address);
+            Player* p = dynamic_cast<Player*>(scene->get(address));
             if(p == nullptr)
             {
-                Game_Object* p = new Game_Object(
+                Player* p = new Player(
                     static_cast<double>(x),
                     static_cast<double>(y),
                     120, 80
@@ -142,10 +143,12 @@ void Core::update(int delta)
                 p->set_texture(texture_handler->get(id));
                 scene->add(p, address);
             }
-            else if(p != scene->get(local   ))
+            else if(p != scene->get(local))
             {
-                p->position.set_x(static_cast<double>(x));
-                p->position.set_y(static_cast<double>(y));
+                p->move_to(Vector2d(
+                    static_cast<double>(x),
+                    static_cast<double>(y)
+                ));
             }
         }
         else if(type == DISCONNECTED)
@@ -165,31 +168,11 @@ void Core::update(int delta)
 
             if(scene->get(address))
             {
-                std::cout << "DISC" << std::endl;
+                std::cout << address << " disconnected" << std::endl;
                 scene->remove(address);
             }
         }
     }
-
-    IPaddress ip_addr = Connection_get_address(connection);
-    std::string local =
-        std::to_string((ip_addr.host & 0xFF000000) >> 24) +
-        std::to_string((ip_addr.host & 0x00FF0000) >> 16) +
-        std::to_string((ip_addr.host & 0x0000FF00) >> 8) +
-        std::to_string((ip_addr.host & 0x000000FF)) +
-        std::to_string(ip_addr.port);
-    Uint8 buffer[4] = {0};
-    SDLNet_Write16(
-        static_cast<Uint16>(scene->get(local)->position.get_x()),
-        buffer
-    );
-    SDLNet_Write16(
-        static_cast<Uint16>(scene->get(local)->position.get_y()),
-        buffer + 2
-    );
-
-    Connection_send_flag(connection, POSITION);
-    Connection_send_data(connection, buffer, 4);
 }
 
 void Core::loop()

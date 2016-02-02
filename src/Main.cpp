@@ -42,12 +42,12 @@ int main()
             std::to_string((ip_addr.host & 0x000000FF)) +
             std::to_string(ip_addr.port);
 
-        Game_Object* object = new Game_Object(
+        Player* player = new Player(
             std::rand() % 800, std::rand() % 600, 120, 80
         );
-        object->set_texture(core.texture_handler->get(id));
+        player->set_texture(core.texture_handler->get(id));
 
-        core.scene->add(object, name);
+        core.scene->add(player, name);
         core.loop();
     }
     catch(const char* message)

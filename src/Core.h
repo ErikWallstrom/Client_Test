@@ -4,6 +4,8 @@
 #include "Texture_Handler.h"
 #include "Event_Handler.h"
 #include "Connection.h"
+#include "Vector2d.h"
+#include "Player.h"
 #include "Window.h"
 #include "Scene.h"
 
