@@ -22,9 +22,22 @@ Core::Core(const char* title, int width, int height,
     }
 
     connection = Connection_create(ip, port);
-    if(connection == nullptr)
+    if(!connection)
     {
-        throw "Connection failed";
+        std::cout << "\nConnection failed, retrying..." << std::endl;
+        for(int i = 0; i < 3; i++)
+        {
+            connection = Connection_create(ip, port);
+            if(connection)
+            {
+                break;
+            }
+        }
+
+        if(connection == nullptr)
+        {
+            throw "Connection failed";
+        }
     }
 
     window = new Window(title, width, height);

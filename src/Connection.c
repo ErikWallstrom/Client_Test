@@ -15,7 +15,6 @@ Connection* Connection_create(const char* ip, Uint16 port)
     Connection* self = (Connection*)calloc(1, sizeof(Connection));
     if(!self)
     {
-        exit(2);
         return NULL;
     }
 
