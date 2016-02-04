@@ -2,6 +2,7 @@
 #include <string>
 #include <ctime>
 #include <iostream>
+#include "Font.h"
 /*
 size_t id = texture_handler.load_texture("../../res/images/Logo.png");
 
@@ -9,7 +10,7 @@ Game_Object object(50.0, 50.0, 100, 100);
 object.set_texture(texture_handler.get_texture(id));
 scene.add(&object);
 */
-
+#undef main
 int main()
 {
     std::cout << "EW_AH Client V_1.0\n" << std::endl;
@@ -30,6 +31,9 @@ int main()
             "Game Window", 800, 600,
             ip.c_str(), port
         );
+
+        Font f(core.window->get_renderer(), "test", 16);
+
 
         std::srand(std::time(0));
 

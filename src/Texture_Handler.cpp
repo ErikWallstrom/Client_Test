@@ -19,8 +19,7 @@ size_t Texture_Handler::load(const char* file)
     SDL_Texture* texture = IMG_LoadTexture(renderer, file);
     if(!texture)
     {
-        std::cout << SDL_GetError() << std::endl;
-        return 0;
+        throw IMG_GetError();
     }
 
     textures.push_back(texture);

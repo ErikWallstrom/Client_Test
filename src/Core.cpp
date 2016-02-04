@@ -1,5 +1,6 @@
 #include "Core.h"
 #include "../include/SDL2/SDL_net.h"
+#include "../include/SDL2/SDL_ttf.h"
 #include <iostream>
 #include <cmath>
 
@@ -21,6 +22,11 @@ Core::Core(const char* title, int width, int height,
         throw IMG_GetError();
     }
 
+    if(TTF_Init())
+    {
+        throw TTF_GetError();
+    }
+/*
     connection = Connection_create(ip, port);
     if(!connection)
     {
@@ -39,7 +45,7 @@ Core::Core(const char* title, int width, int height,
             throw "Connection failed";
         }
     }
-
+*/
     window = new Window(title, width, height);
     event_handler = new Event_Handler;
     scene = new Scene(
@@ -60,8 +66,9 @@ Core::~Core()
     delete scene;
     delete event_handler;
     delete window;
-    Connection_destroy(&connection);
+    //Connection_destroy(&connection);
 
+    TTF_Quit();
     IMG_Quit();
     SDLNet_Quit();
     SDL_Quit();
@@ -77,7 +84,7 @@ void Core::handle_events()
             break;
         }
     }
-
+/*
     IPaddress ip_addr = Connection_get_address(connection);
     std::string local =
         std::to_string((ip_addr.host & 0xFF000000) >> 24) +
@@ -103,12 +110,13 @@ void Core::handle_events()
 
         Connection_send_flag(connection, POSITION);
         Connection_send_data(connection, buffer, 4);
-    }
+    }*/
 }
 
 void Core::update(int delta)
 {
     scene->update(delta);
+    /*
     while(Connection_recieved(connection))
     {
         Uint8 type = Connection_recv_flag(connection);
@@ -185,7 +193,7 @@ void Core::update(int delta)
                 scene->remove(address);
             }
         }
-    }
+    }*/
 }
 
 void Core::loop()
@@ -197,10 +205,10 @@ void Core::loop()
         int delta_time = SDL_GetTicks() - last_time;
         last_time = SDL_GetTicks();
 
-        handle_events();
-        update(delta_time);
         scene->draw();
+        update(delta_time);
+        handle_events();
     }
 
-    Connection_send_flag(connection, DISCONNECTED);
+    //Connection_send_flag(connection, DISCONNECTED);
 }
