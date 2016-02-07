@@ -14,7 +14,7 @@ Texture_Handler::~Texture_Handler()
     }
 }
 
-size_t Texture_Handler::load(const char* file)
+Texture_ID Texture_Handler::load(const char* file)
 {
     SDL_Texture* texture = IMG_LoadTexture(renderer, file);
     if(!texture)
@@ -26,7 +26,7 @@ size_t Texture_Handler::load(const char* file)
 	return textures.size();
 }
 
-SDL_Texture* Texture_Handler::get(size_t id)
+SDL_Texture* Texture_Handler::get(Texture_ID id)
 {
 	return textures.at(id - 1);
 }

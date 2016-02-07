@@ -3,7 +3,6 @@
 
 #include "Texture_Handler.h"
 #include "Event_Handler.h"
-#include "Connection.h"
 #include "Vector2d.h"
 #include "Player.h"
 #include "Window.h"
@@ -20,13 +19,11 @@ private:
     void update(int delta);
 
 public:
-    Connection* connection;
     Window* window;
     Scene* scene;
     Texture_Handler* texture_handler;
 
-    Core(const char* title, int width, int height,
-         const char* ip, Uint16 port);
+    Core(const char* title, int width, int height);
     ~Core();
     void loop();
 };

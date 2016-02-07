@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+typedef size_t Texture_ID;
+
 class Texture_Handler
 {
 private:
@@ -15,8 +17,8 @@ public:
     Texture_Handler(SDL_Renderer* renderer);
     ~Texture_Handler();
 
-    size_t load(const char* file);
-    SDL_Texture* get(size_t id);
+    Texture_ID load(const char* file);
+    SDL_Texture* get(Texture_ID id);
 };
 
 #endif
